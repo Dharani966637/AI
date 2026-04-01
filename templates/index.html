@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uber Royal App</title>
+
+    <!-- ICONS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- 🚗 4 MOVING CARS -->
+<img src="{{ url_for('static', filename='car.png') }}" class="car car1">
+
+
+<h1><i class="fa-solid fa-car"></i> Uber Royal Dashboard</h1>
+
+<!-- FLASH MESSAGE -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash">
+      {{ messages[0] }}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- FORM -->
+<div class="form-container">
+
+    <h2>{{ 'Update Customer' if edit_data else 'Add Customer' }}</h2>
+
+    <form method="POST">
+
+        <input type="text" name="name" placeholder="👤 Name"
+        value="{{ edit_data[0] if edit_data else '' }}" required>
+
+        <input type="text" name="mobile" placeholder="📱 Mobile"
+        value="{{ edit_data[1] if edit_data else '' }}"
+        {{ 'readonly' if edit_data else '' }} required>
+
+        <input type="number" name="amount" placeholder="💰 Amount"
+        value="{{ edit_data[2] if edit_data else '' }}" required>
+
+        <input type="text" name="location" placeholder="📍 Location"
+        value="{{ edit_data[3] if edit_data else '' }}" required>
+
+        {% if edit_data %}
+            <button type="submit" name="update">
+                <i class="fa-solid fa-pen"></i> Update
+            </button>
+            <a href="/" class="cancel">Cancel</a>
+        {% else %}
+            <button type="submit" name="add">
+                <i class="fa-solid fa-user-plus"></i> Add
+            </button>
+        {% endif %}
+
+    </form>
+</div>
+
+<!-- TABLE -->
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Amount</th>
+        <th>Location</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for c in customers %}
+    <tr>
+        <td>{{ c[0] }}</td>
+        <td>{{ c[1] }}</td>
+        <td>{{ c[2] }}</td>
+        <td>{{ c[3] }}</td>
+        <td>
+            <a href="/?edit={{ c[1] }}" class="edit">
+                <i class="fa-solid fa-edit"></i>
+            </a>
+
+            <a href="/?delete={{ c[1] }}" class="delete"
+               onclick="return confirm('Delete this record?')">
+                <i class="fa-solid fa-trash"></i>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
